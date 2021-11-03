@@ -1,4 +1,5 @@
-# CockroachDB Azure Multi Region Demo (Manual)
+
+# UNDER DEVELOPMENT CockroachDB Azure Multi Region Demo (Manual)
 
 In this demo you will deploy CockroackDB across three Azure Regions. Region one and two will be running a K3s Kubernetes Cluster and the third region will be three virtual machines.
 
