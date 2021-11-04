@@ -20,4 +20,3 @@ Create a pod and ping the test pod
 ```
 kubectl run -it network-test --image=alpine --restart=Never -- ping $podip
 ```
-10.10.0.41
