@@ -3,6 +3,15 @@
 
 In this demo you will deploy CockroackDB across three Azure Regions. Region one and two will be running a K3s Kubernetes Cluster and the third region will be three virtual machines.
 
+## Requirements
+
+- Deploy a Multi Region CockroachDB solution in either one or more cloud providers. 
+- Two regions in Kubernetes and on Virtual Machines.
+- Implement split node certificates.
+- Implement pgpool and/or pgbouncer.
+- Attach an application to the application.
+
+
 ## Prereqs
 
 To complete this demo you will allready need the following.
@@ -80,46 +89,38 @@ rm cilium-linux-amd64.tar.gz{,.sha256sum}
 kubectl config use-context k3s-cl1
 cilium install --config cluster-pool-ipv4-cidr=10.10.0.0/16 --cluster-name=k3s-cl1 --cluster-id=1
 ```
-7. Repeat for cluster 2
+7. We need to no repeat this process for our second [k3s](https://github.com/k3s-io/k3s) cluster. If you are planning to run Hubble Relay across clusters, it is best to share a certificate authority (CA) between the clusters as it will enable mTLS across clusters to just work. We can do this by simply propagate the Kubernetes secret containing the CA from one cluster to the other.
 
-Propergate Cilium CA Secret form one cluster to the other.
 ```
+kubectl config use-context k3s-cl1
 kubectl get secret cilium-ca -n kube-system -o yaml > cilium-ca.yaml
-kubectx k3s-cl2
-kubectl create -f  cilium-ca.yaml
+kubectl config use-context k3s-cl2
+kubectl create -f cilium-ca.yaml
 ```
 
-Install  Cilium on cluster 2
+8. Perform the install of the Cilium CNI on the second k3s](https://github.com/k3s-io/k3s) cluster.
 
-If you are planning to run Hubble Relay across clusters, it is best to share a certificate authority (CA) between the clusters as it will enable mTLS across clusters to just work.
+>Note: Pay attention here to the different cidr that has been used form the first cluster. Cluster must not have overlappping address space for the Pod network
 
-The easiest way to establish this is to pass --inherit-ca to the install command when installing additional clusters:
 ```
-cilium install  --config cluster-pool-ipv4-cidr=10.11.0.0/16 --cluster-name=k3s-cl2 --cluster-id=2 
+cilium install --config cluster-pool-ipv4-cidr=10.11.0.0/16 --cluster-name=k3s-cl2 --cluster-id=2 
 ```
 
-If you are not using cilium install for the installation, simply propagate the Kubernetes secret containing the CA from one cluster to the other.
+9. Cilium Cluster Mesh is a way to build a mesh of Kubernetes clusters. By connecting clusters together you enable pod-to-pod connectivity across all clusters, define global services to load-balance between clusters and enforce security policies to restrict access. To enable this feature run the two commands below for your host workstation.
 
-Enable clustermesh
 ```
 cilium clustermesh enable --context k3s-cl1 --service-type LoadBalancer
 cilium clustermesh enable --context k3s-cl2 --service-type LoadBalancer
 ```
+You are able to check the progress by using the commands below.
 
-Check Status
 ```
 cilium clustermesh status --context k3s-cl1 --wait
 cilium clustermesh status --context k3s-cl2 --wait
 ```
 
-Connect the clusters together...
+10. Once the mesh is established you can connect the two clusters together.
+
 ```
 cilium clustermesh connect --context k3s-cl1 --destination-context k3s-cl2
-```
-
-
-Set kubeconfig to the below...
-```
-sudo chmod 644 /etc/rancher/k3s/k3s.yaml
-export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 ```
