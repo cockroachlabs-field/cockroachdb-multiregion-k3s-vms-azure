@@ -16,10 +16,8 @@ In this demo you will deploy CockroackDB across three Azure Regions. Region one 
 
 To complete this demo you will allready need the following.
 
-- Three Virtual Networks in three different regions without overlapping address space.
-- Three subnets, one in each Virtual Network.
-- Three virtual machines (Ubuntu 20.04 was used to create this demo) in each region with a NIC connected to the corrasponding subnet.
-- For security best practise, each virtual machine should have a Network Security Group (NSG) associated with its network adaptor.
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [k3sup](https://github.com/alexellis/k3sup)
 
 ## Network Secrity Rules
 
