@@ -129,6 +129,36 @@ az network nsg rule create -g $rg --nsg-name crdb-$loc3-nsg -n NsgRuleSSH --prio
     --source-address-prefixes '*' --source-port-ranges '*' \
     --destination-address-prefixes '*' --destination-port-ranges 22 --access Allow \
     --protocol Tcp --description "Allow SSH Access to all VMS."
+
+az network nsg rule create -g $rg --nsg-name crdb-$loc1-nsg -n NsgRulek8sAPI --priority 200 \
+    --source-address-prefixes '*' --source-port-ranges '*' \
+    --destination-address-prefixes '*' --destination-port-ranges 6443 --access Allow \
+    --protocol Tcp --description "Allow Kubernetes API Access to all VMS."
+
+az network nsg rule create -g $rg --nsg-name crdb-$loc2-nsg -n NsgRulek8sAPI --priority 200 \
+    --source-address-prefixes '*' --source-port-ranges '*' \
+    --destination-address-prefixes '*' --destination-port-ranges 6443 --access Allow \
+    --protocol Tcp --description "Allow Kubernetes API Access to all VMS."
+
+az network nsg rule create -g $rg --nsg-name crdb-$loc3-nsg -n NsgRulek8sAPI --priority 200 \
+    --source-address-prefixes '*' --source-port-ranges '*' \
+    --destination-address-prefixes '*' --destination-port-ranges 6443 --access Allow \
+    --protocol Tcp --description "Allow Kubernetes API Access to all VMS."
+
+az network nsg rule create -g $rg --nsg-name crdb-$loc1-nsg -n NsgRuleNodePorts --priority 300 \
+    --source-address-prefixes '*' --source-port-ranges '*' \
+    --destination-address-prefixes '*' --destination-port-ranges 30000-32767 --access Allow \
+    --protocol Tcp --description "Allow Kubernetes NodePort Access to all VMS."
+
+az network nsg rule create -g $rg --nsg-name crdb-$loc2-nsg -n NsgRuleNodePorts --priority 300 \
+    --source-address-prefixes '*' --source-port-ranges '*' \
+    --destination-address-prefixes '*' --destination-port-ranges 30000-32767 --access Allow \
+    --protocol Tcp --description "Allow Kubernetes NodePort Access to all VMS."
+
+az network nsg rule create -g $rg --nsg-name crdb-$loc3-nsg -n NsgRuleNodePorts --priority 300 \
+    --source-address-prefixes '*' --source-port-ranges '*' \
+    --destination-address-prefixes '*' --destination-port-ranges 30000-32767 --access Allow \
+    --protocol Tcp --description "Allow Kubernetes NodePort Access to all VMS."
 ```
 
 

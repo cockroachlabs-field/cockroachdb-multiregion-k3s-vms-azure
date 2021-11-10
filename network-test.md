@@ -1,6 +1,6 @@
-Set Context for k3s-cl1
+Set Context for $clus1
 ```
-kubectl config use-context k3s-cl1
+kubectl config use-context $clus1
 ```
 Create a test pod to ping
 ```
@@ -12,9 +12,9 @@ Get Ip addresss of pod to ping
 kubectl describe pods
 ```
 
-Switch to k3s-cl2 context
+Switch to $clus2 context
 ```
-kubectl config use-context k3s-cl2
+kubectl config use-context $clus2
 ```
 Create a pod and ping the test pod
 ```

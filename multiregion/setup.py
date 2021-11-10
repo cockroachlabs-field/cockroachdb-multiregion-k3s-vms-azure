@@ -23,6 +23,8 @@ from time import sleep
 #     'us-west1-b': 'gke_cockroach-alex_us-west1-b_my-cluster',
 # }
 contexts = {
+      'eastus': 'crdb-k3s-eastus',
+      'westus': 'crdb-k3s-westus',
 }
 
 # Fill in the `regions` map with the zones and corresponding regions of your
@@ -39,6 +41,8 @@ contexts = {
 #     'us-west1-b': 'us-west1',
 # }
 regions = {
+      'eastus': 'eastus',
+      'westus': 'eastus',
 }
 
 # Paths to directories in which to store certificates and generated YAML files.
