@@ -1,4 +1,6 @@
-- Download and Configue the Scripts to deploy cockroachdb
+# Deploy CockroachDB to Kubernetes Clusters
+
+- Download and Configure the Scripts to deploy cockroachdb
  1. Create a directory and download the required script and configuration files into it:   
 
 ```bash
@@ -22,11 +24,11 @@ kubectl config get-contexts
 
 At the top of the `setup.py` script, fill in the `contexts` map with the zones of your clusters and their "context" names, e.g.:
 
-> `context = { 'us-east1-b': 'gke_cockroach-shared_us-east1-b_cockroachdb1', 'us-west1-a': 'gke_cockroach-shared_us-west1-a_cockroachdb2', 'us-central1-a': 'gke_cockroach-shared_us-central1-a_cockroachdb3', }`
+> `contexts = { 'eastus': 'crdb-k3s-eastus', 'westus': 'crdb-k3s-westus',}`
 
 3. In the `setup.py` script, fill in the `regions` map with the zones and corresponding regions of your clusters, for example:
 
-> `$ regions = { 'us-east1-b': 'us-east1', 'us-west1-a': 'us-west1', 'us-central1-a': 'us-central1', }`
+> `regions = { 'eastus': 'eastus', 'westus': 'eastus',}`
 
 Setting `regions` is optional, but recommended, because it improves CockroachDB's ability to diversify data placement if you use more than one zone in the same region. If you aren't specifying regions, just leave the map empty.
 
@@ -62,7 +64,7 @@ For each region, modify `configmap.yaml` by replacing:
 - `region2` and `region3` with the namespaces in which the CockroachDB pods will run in the other 2 regions.
 - `ip1`, `ip2`, and `ip3` with the IP addresses of the Network Load Balancers in the region, which you looked up in the previous step.
 
-You will end up with 3 different ConfigMaps. Give each ConfigMap a unique filename like `configmap-1.yaml`. An example of which can be found in this repository
+You will end up with 2 different ConfigMaps. Give each ConfigMap a unique filename like `configmap-1.yaml`. An example of which can be found in this repository
 
 3. For each region, first back up the existing ConfigMap:  
 
@@ -85,31 +87,23 @@ kubectl get -n kube-system cm/coredns --export -o yaml --context <cluster-contex
 8. Confirm that the CockroachDB pods in each cluster say `1/1` in the `READY` column - This could take a couple of minutes to propagate, indicating that they've successfully joined the cluster:    
 
 ```bash
-kubectl get pods --selector app=cockroachdb --all-namespaces --context <cluster-context-1>
+kubectl get pods --selector app=cockroachdb --all-namespaces --context $clus1
 ```
 
 > `NAMESPACE NAME READY STATUS RESTARTS AGE
-us-east1-b cockroachdb-0 1/1 Running 0 14m
-us-east1-b cockroachdb-1 1/1 Running 0 14m
-us-east1-b cockroachdb-2 1/1 Running 0 14m`
+us-east cockroachdb-0 1/1 Running 0 14m
+us-east cockroachdb-1 1/1 Running 0 14m
+us-east cockroachdb-2 1/1 Running 0 14m`
+
 
 ```bash
-kubectl get pods --selector app=cockroachdb --all-namespaces --context <cluster-context-2>
+kubectl get pods --selector app=cockroachdb --all-namespaces --context $clus2
 ```
 
 > `NAMESPACE NAME READY STATUS RESTARTS AGE
-us-central1-a cockroachdb-0 1/1 Running 0 14m
-us-central1-a cockroachdb-1 1/1 Running 0 14m
-us-central1-a cockroachdb-2 1/1 Running 0 14m`
-
-```bash
-kubectl get pods --selector app=cockroachdb --all-namespaces --context <cluster-context-3>
-```
-
-> `NAMESPACE NAME READY STATUS RESTARTS AGE
-us-west1-a cockroachdb-0 1/1 Running 0 14m
-us-west1-a cockroachdb-1 1/1 Running 0 14m
-us-west1-a cockroachdb-2 1/1 Running 0 14m`
+us-west cockroachdb-0 1/1 Running 0 14m
+us-west cockroachdb-1 1/1 Running 0 14m
+us-west cockroachdb-2 1/1 Running 0 14m`
 
 
 9. Create secure clients
@@ -127,5 +121,6 @@ kubectl exec -it cockroachdb-client-secure -n $loc1 -- ./cockroach sql --certs-d
 ```bash
 kubectl port-forward cockroachdb-0 8080 --context $clus1 --namespace $loc1
 ```
+You will then be able to access the Admin UI via your browser. http://localhost:8080
 
 [Back](README.md)
