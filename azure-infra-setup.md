@@ -267,3 +267,5 @@ az vm create \
   --admin-username ubuntu \
   --generate-ssh-keys
 ```
+
+[Back](README.md)
