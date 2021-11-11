@@ -82,7 +82,7 @@ kubectl apply -f <configmap-name> --context <cluster-context>
 kubectl get -n kube-system cm/coredns --export -o yaml --context <cluster-context>
 ```
 
-8. Confirm that the CockroachDB pods in each cluster say `1/1` in the `READY` column - This could take a couple of minutes to propergate, indicating that they've successfully joined the cluster:    
+8. Confirm that the CockroachDB pods in each cluster say `1/1` in the `READY` column - This could take a couple of minutes to propagate, indicating that they've successfully joined the cluster:    
 
 ```bash
 kubectl get pods --selector app=cockroachdb --all-namespaces --context <cluster-context-1>
