@@ -48,7 +48,7 @@ k3sup join \
   --server-ip $MASTERR1 \
   --server-user ubuntu \
   --sudo \
-  --k3s-extra-args "--flannel-backend=none
+  --k3s-extra-args '--flannel-backend=none --disable-network-policy'
 ```
 Repeat this for the third node.
 
@@ -67,7 +67,7 @@ k3sup join \
   --server-ip $MASTERR1 \
   --server-user ubuntu \
   --sudo \
-  --k3s-extra-args "--flannel-backend=none
+  --k3s-extra-args '--flannel-backend=none --disable-network-policy'
 ```
 
 4. So now we have a single cluster in one region we can now move on to the deployment of [k3s](https://github.com/k3s-io/k3s) to our second region. The command below is similar to the command is step two but we need to ensure we use the Public IP of the first node in our second region. 
@@ -105,7 +105,7 @@ k3sup join \
   --server-ip $MASTERR2 \
   --server-user ubuntu \
   --sudo \
-  --k3s-extra-args "--flannel-backend=none
+  --k3s-extra-args '--flannel-backend=none --disable-network-policy'
 ```
 Repeat this for the third node.
 
@@ -124,7 +124,7 @@ k3sup join \
   --server-ip $MASTERR2 \
   --server-user ubuntu \
   --sudo \
-  --k3s-extra-args "--flannel-backend=none
+  --k3s-extra-args '--flannel-backend=none --disable-network-policy'
 ```
 
 5. Install the latest version of the Cilium CLI. The Cilium CLI can be used to install Cilium, inspect the state of a Cilium installation, and enable/disable various features (e.g. clustermesh, Hubble).
