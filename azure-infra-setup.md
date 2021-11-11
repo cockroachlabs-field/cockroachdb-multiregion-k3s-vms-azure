@@ -232,6 +232,6 @@ az vm create \
   --admin-username ubuntu \
   --generate-ssh-keys
 ```
-You now have all the required infrastructure to move to the next stage. Deploying Kubernetes.
+You now have all the required infrastructure to move to the next stage. [Deploying Kubernetes.](kubernetes-setup.md)
 
 [Back](README.md)

@@ -175,5 +175,6 @@ cilium clustermesh status --context $clus2 --wait
 ```
 cilium clustermesh connect --context $clus1 --destination-context $clus2
 ```
+Now you are ready to move to the next step. [Region Three Virtual Machine setup.](vm-setup.md)
 
 [Back](README.md)
