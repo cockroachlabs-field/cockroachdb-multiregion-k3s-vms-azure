@@ -29,14 +29,14 @@ data:
         forward . 10.1.1.4:31449 10.1.1.5:31449 10.1.1.6:31449 {      # <---- Modify
         }
     }
-    northeurope.svc.cluster.local:53 {       # <---- Modify
+    westus.svc.cluster.local:53 {       # <---- Modify
         log
         errors
         ready
         cache 10
-        forward . 10.3.1.4:30320 10.3.1.5:30320 10.3.1.6:30320 {      # <---- Modify
-          }
-      }
+        forward . 10.2.1.4:31941 10.2.1.5:31941 10.2.1.6:31941 {      # <---- Modify
+        }
+    }
   NodeHosts: |
     10.2.1.4 crdb-westus-node1
 kind: ConfigMap

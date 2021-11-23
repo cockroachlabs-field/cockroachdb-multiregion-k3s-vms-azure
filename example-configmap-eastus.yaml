@@ -26,7 +26,16 @@ data:
           errors
           ready
           cache 10
-          forward . 10.2.1.4:31450 {      # <---- Modify
+          forward . 10.2.1.4:31941 10.2.1.5:31941 10.2.1.6:31941 {      # <---- Modify
+          }
+      }
+      }
+      northeurope.svc.cluster.local:53 {       # <---- Modify
+          log
+          errors
+          ready
+          cache 10
+          forward . 10.3.1.4:30320 10.3.1.5:30320 10.3.1.6:30320 {      # <---- Modify
           }
       }
   NodeHosts: |
