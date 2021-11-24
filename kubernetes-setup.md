@@ -127,6 +127,7 @@ k3sup join \
   --k3s-extra-args '--flannel-backend=none --disable-network-policy'
 ```
 
+```
 MASTERR3=$(az vm show -d -g $rg  -n crdb-$loc3-node1 --query publicIps -o tsv)
 ```
 Now use [k3sup](https://github.com/alexellis/k3sup) to create the second Kubernetes cluster.
