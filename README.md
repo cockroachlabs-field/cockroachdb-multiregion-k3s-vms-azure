@@ -50,8 +50,8 @@ To complete this demo there are a number of steps. These are listed below.
 
 1. [Azure infrastructure setup](azure-infra-setup.md)
 1. [Kubernetes setup](kubernetes-setup.md)
-1. [Network test](network-test.md)
 1. [CockroachDB setup](cockroach-setup.md)
+1. [Virtual Machine setup](vm-setup.md)
 
 ## Clean Up
 

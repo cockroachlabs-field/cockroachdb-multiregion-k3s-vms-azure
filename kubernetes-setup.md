@@ -126,11 +126,12 @@ k3sup join \
   --sudo \
   --k3s-extra-args '--flannel-backend=none --disable-network-policy'
 ```
-
+5. We are now going to add a third Kubernetes cluster in the third region North Europe using [k3sup](https://github.com/alexellis/k3sup).
+Obtain the Public IP address of the first node.
 ```
 MASTERR3=$(az vm show -d -g $rg  -n crdb-$loc3-node1 --query publicIps -o tsv)
 ```
-Now use [k3sup](https://github.com/alexellis/k3sup) to create the second Kubernetes cluster.
+Now use [k3sup](https://github.com/alexellis/k3sup) to create the third Kubernetes cluster.
 ```
 k3sup install \
   --ip=$MASTERR3 \
@@ -181,7 +182,7 @@ k3sup join \
   --k3s-extra-args '--flannel-backend=none --disable-network-policy'
 ```
 
-5. Install the latest version of the Cilium CLI. The Cilium CLI can be used to install Cilium, inspect the state of a Cilium installation, and enable/disable various features (e.g. clustermesh, Hubble).
+6. Install the latest version of the Cilium CLI. The Cilium CLI can be used to install Cilium, inspect the state of a Cilium installation, and enable/disable various features (e.g. clustermesh, Hubble).
 ```
 curl -L --remote-name-all https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz{,.sha256sum}
 sha256sum --check cilium-linux-amd64.tar.gz.sha256sum
@@ -189,12 +190,12 @@ sudo tar xzvfC cilium-linux-amd64.tar.gz /usr/local/bin
 rm cilium-linux-amd64.tar.gz{,.sha256sum}
 ```
 
-6. Now that we have installed the Cilium CLI we can use it to install the Cilium CNI on to our first [k3s](https://github.com/k3s-io/k3s) cluster. First we ensure we are using the correct context.  
+7. Now that we have installed the Cilium CLI we can use it to install the Cilium CNI on to our first [k3s](https://github.com/k3s-io/k3s) cluster. First we ensure we are using the correct context.  
 ```
 kubectl config use-context $clus1
 cilium install --config cluster-pool-ipv4-cidr=10.10.0.0/16 --cluster-name=$clus1 --cluster-id=1
 ```
-7. We need to no repeat this process for our second [k3s](https://github.com/k3s-io/k3s) cluster. If you are planning to run Hubble Relay across clusters, it is best to share a certificate authority (CA) between the clusters as it will enable mTLS across clusters to just work. We can do this by simply propagate the Kubernetes secret containing the CA from one cluster to the other.
+8. We need to no repeat this process for our second [k3s](https://github.com/k3s-io/k3s) cluster. If you are planning to run Hubble Relay across clusters, it is best to share a certificate authority (CA) between the clusters as it will enable mTLS across clusters to just work. We can do this by simply propagate the Kubernetes secret containing the CA from one cluster to the other.
 
 ```
 kubectl config use-context $clus1
@@ -203,7 +204,7 @@ kubectl config use-context $clus2
 kubectl create -f cilium-ca.yaml
 ```
 
-8. Perform the install of the Cilium CNI on the second and third [k3s](https://github.com/k3s-io/k3s) cluster.
+9. Perform the install of the Cilium CNI on the second and third [k3s](https://github.com/k3s-io/k3s) cluster.
 
 >Note: Pay attention here to the different cidr that has been used form the first cluster. Cluster must not have overlappping address space for the Pod network
 
@@ -212,7 +213,7 @@ cilium install --config cluster-pool-ipv4-cidr=10.11.0.0/16 --cluster-name=$clus
 cilium install --config cluster-pool-ipv4-cidr=10.12.0.0/16 --cluster-name=$clus3 --cluster-id=3
 ```
 
-9. Cilium Cluster Mesh is a way to build a mesh of Kubernetes clusters. By connecting clusters together you enable pod-to-pod connectivity across all clusters, define global services to load-balance between clusters and enforce security policies to restrict access. To enable this feature run the two commands below for your host workstation.
+10. Cilium Cluster Mesh is a way to build a mesh of Kubernetes clusters. By connecting clusters together you enable pod-to-pod connectivity across all clusters, define global services to load-balance between clusters and enforce security policies to restrict access. To enable this feature run the two commands below for your host workstation.
 
 ```
 cilium clustermesh enable --context $clus1 --service-type LoadBalancer
@@ -227,7 +228,7 @@ cilium clustermesh status --context $clus2 --wait
 cilium clustermesh status --context $clus3 --wait
 ```
 
-10. Once the mesh is established you can connect the two clusters together.
+11. Once the mesh is established you can connect the two clusters together.
 
 ```
 cilium clustermesh connect --context $clus1 --destination-context $clus2
@@ -235,6 +236,6 @@ cilium clustermesh connect --context $clus2 --destination-context $clus3
 cilium clustermesh connect --context $clus1 --destination-context $clus3
 ```
 
-Now you are ready to move to the next step. [Pod Network test](network-test.md)
+Now you are ready to move to the next step. [Cockroach setup](cockroach-setup.md)
 
 [Back](README.md)
