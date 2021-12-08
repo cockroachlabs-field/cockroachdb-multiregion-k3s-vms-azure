@@ -56,6 +56,23 @@ az network vnet peering create -g $rg -n $loc3-$loc1-peer --vnet-name crdb-$loc3
     --remote-vnet crdb-$loc1 --allow-vnet-access --allow-forwarded-traffic --allow-gateway-transit
 ```
 
+Create a DNS Private Zone for name resolution for all region.
+
+```
+az network private-dns zone create -g $rg \
+   -n private.cockroach.internal
+
+az network private-dns link vnet create -g $rg -n $loc1-DNSLink \
+   -z private.cockroach.internal -v crdb-$loc1 -e true
+
+az network private-dns link vnet create -g $rg -n $loc2-DNSLink \
+   -z private.cockroach.internal -v crdb-$loc2 -e true
+
+az network private-dns link vnet create -g $rg -n $loc3-DNSLink \
+   -z private.cockroach.internal -v crdb-$loc3 -e true
+```
+
+
 - Create Public IPs for the all of the VM's.
 
 ```
@@ -232,6 +249,11 @@ az vm create \
   --admin-username ubuntu \
   --generate-ssh-keys
 ```
+
+Update  /etc/dhcp/dhclient.conf as per the URL below.
+
+https://github.com/Azure/azure-quickstart-templates/blob/master/demos/custom-private-dns/nested/linux-client/setuplinuxclient.sh
+
 You now have all the required infrastructure to move to the next stage. [Deploying Kubernetes.](kubernetes-setup.md)
 
 [Back](README.md)
