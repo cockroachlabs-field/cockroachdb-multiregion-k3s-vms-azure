@@ -159,6 +159,24 @@ az network nic create --resource-group $rg -l $loc3 --name crdb-$loc3-nic3 --vne
 ```
 - Deploy all the required virtual machines. In this demo we will be using 3 nodes in each region.
 
+```
+cat << EOF > cloud-init.txt
+#cloud-config
+package_upgrade: true
+packages:
+  - curl
+output: {all: '| tee -a /var/log/cloud-init-output.log'}
+runcmd:
+  - set -e
+  - grep -v -G domain-name /etc/dhcp/dhclient.conf  > dhclient.tmp
+  - echo "supersede domain-name "private.cockroach.internal";"    >> dhclient.tmp
+  - sudo cp /etc/dhcp/dhclient.conf /etc/dhcp/dhclient.conf.old
+  - sudo cp dhclient.tmp /etc/dhcp/dhclient.conf
+  - sudo cp ddns-dhcphook /etc/dhcp/dhclient-exit-hooks.d
+  - sudo dhclient -v
+EOF
+```
+
 ### Region 1
 
 ```
@@ -170,6 +188,7 @@ az vm create \
   --nics crdb-$loc1-nic1 \
   --admin-username ubuntu \
   --generate-ssh-keys
+  --custom-data cloud-init.txt
 
 az vm create \
   --resource-group $rg \
@@ -179,6 +198,7 @@ az vm create \
   --nics crdb-$loc1-nic2 \
   --admin-username ubuntu \
   --generate-ssh-keys
+  --custom-data cloud-init.txt
 
 az vm create \
   --resource-group $rg \
@@ -188,6 +208,7 @@ az vm create \
   --nics crdb-$loc1-nic3 \
   --admin-username ubuntu \
   --generate-ssh-keys
+  --custom-data cloud-init.txt
 ```
 ### Region 2
 
@@ -200,6 +221,7 @@ az vm create \
   --nics crdb-$loc2-nic1 \
   --admin-username ubuntu \
   --generate-ssh-keys
+  --custom-data cloud-init.txt
 
 az vm create \
   --resource-group $rg \
@@ -209,6 +231,7 @@ az vm create \
   --nics crdb-$loc2-nic2 \
   --admin-username ubuntu \
   --generate-ssh-keys
+  --custom-data cloud-init.txt
 
 az vm create \
   --resource-group $rg \
@@ -218,6 +241,7 @@ az vm create \
   --nics crdb-$loc2-nic3 \
   --admin-username ubuntu \
   --generate-ssh-keys
+  --custom-data cloud-init.txt
 ```
 ### Region 3
 
@@ -230,6 +254,7 @@ az vm create \
   --nics crdb-$loc3-nic1 \
   --admin-username ubuntu \
   --generate-ssh-keys
+  --custom-data cloud-init.txt
 
 az vm create \
   --resource-group $rg \
@@ -239,6 +264,7 @@ az vm create \
   --nics crdb-$loc3-nic2 \
   --admin-username ubuntu \
   --generate-ssh-keys
+  --custom-data cloud-init.txt
 
 az vm create \
   --resource-group $rg \
@@ -248,11 +274,8 @@ az vm create \
   --nics crdb-$loc3-nic3 \
   --admin-username ubuntu \
   --generate-ssh-keys
+  --custom-data cloud-init.txt
 ```
-
-Update  /etc/dhcp/dhclient.conf as per the URL below.
-
-https://github.com/Azure/azure-quickstart-templates/blob/master/demos/custom-private-dns/nested/linux-client/setuplinuxclient.sh
 
 You now have all the required infrastructure to move to the next stage. [Deploying Kubernetes.](kubernetes-setup.md)
 
