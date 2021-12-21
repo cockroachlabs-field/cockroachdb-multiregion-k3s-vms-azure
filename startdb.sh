@@ -1,4 +1,18 @@
-sudo dhclient -v
+export loc1="eastus"
+export loc2="westus"
+export loc3="northeurope"
+
+cockroach cert create-node \
+localhost 127.0.0.1cockroachdb-public \
+cockroachdb-public.default \
+cockroachdb-public.$loc3 \
+cockroachdb-public.$loc3.svc.cluster.local \
+*.cockroachdb \
+*.private.cockroach.internal \
+*.cockroachdb.$loc3 \
+*.cockroachdb.$loc3.svc.cluster.local \
+--certs-dir=/home/ubuntu/cockroach/certs \
+--ca-key=/home/ubuntu/cockroach/my-safe-directory/ca.key
 
 cockroach start \
         --certs-dir=/home/ubuntu/cockroach/certs \

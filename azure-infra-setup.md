@@ -13,6 +13,7 @@ export clus3="crdb-k3s-northeurope"
 export loc1="eastus"
 export loc2="westus"
 export loc3="northeurope"
+export dnsname="private.cockroach.internal"
 ```
 
 ## Create the required Azure Resources
@@ -60,16 +61,16 @@ Create a DNS Private Zone for name resolution for all region.
 
 ```
 az network private-dns zone create -g $rg \
-   -n private.cockroach.internal
+   -n $dnsname
 
 az network private-dns link vnet create -g $rg -n $loc1-DNSLink \
-   -z private.cockroach.internal -v crdb-$loc1 -e true
+   -z $dnsname -v crdb-$loc1 -e true
 
 az network private-dns link vnet create -g $rg -n $loc2-DNSLink \
-   -z private.cockroach.internal -v crdb-$loc2 -e true
+   -z $dnsname -v crdb-$loc2 -e true
 
 az network private-dns link vnet create -g $rg -n $loc3-DNSLink \
-   -z private.cockroach.internal -v crdb-$loc3 -e true
+   -z $dnsname -v crdb-$loc3 -e true
 ```
 
 
@@ -169,10 +170,10 @@ output: {all: '| tee -a /var/log/cloud-init-output.log'}
 runcmd:
   - set -e
   - grep -v -G domain-name /etc/dhcp/dhclient.conf  > dhclient.tmp
-  - echo "supersede domain-name "private.cockroach.internal";"    >> dhclient.tmp
+  - echo "supersede domain-name \"$dnsname\";"    >> dhclient.tmp
+  - echo "prepend domain-name-servers 168.63.129.16;" >> dhclient.tmp
   - sudo cp /etc/dhcp/dhclient.conf /etc/dhcp/dhclient.conf.old
   - sudo cp dhclient.tmp /etc/dhcp/dhclient.conf
-  - sudo cp ddns-dhcphook /etc/dhcp/dhclient-exit-hooks.d
   - sudo dhclient -v
 EOF
 ```
@@ -187,7 +188,7 @@ az vm create \
   --image UbuntuLTS \
   --nics crdb-$loc1-nic1 \
   --admin-username ubuntu \
-  --generate-ssh-keys
+  --generate-ssh-keys \
   --custom-data cloud-init.txt
 
 az vm create \
@@ -197,7 +198,7 @@ az vm create \
   --image UbuntuLTS \
   --nics crdb-$loc1-nic2 \
   --admin-username ubuntu \
-  --generate-ssh-keys
+  --generate-ssh-keys \
   --custom-data cloud-init.txt
 
 az vm create \
@@ -207,7 +208,7 @@ az vm create \
   --image UbuntuLTS \
   --nics crdb-$loc1-nic3 \
   --admin-username ubuntu \
-  --generate-ssh-keys
+  --generate-ssh-keys \
   --custom-data cloud-init.txt
 ```
 ### Region 2
@@ -220,7 +221,7 @@ az vm create \
   --image UbuntuLTS \
   --nics crdb-$loc2-nic1 \
   --admin-username ubuntu \
-  --generate-ssh-keys
+  --generate-ssh-keys \
   --custom-data cloud-init.txt
 
 az vm create \
@@ -230,7 +231,7 @@ az vm create \
   --image UbuntuLTS \
   --nics crdb-$loc2-nic2 \
   --admin-username ubuntu \
-  --generate-ssh-keys
+  --generate-ssh-keys \
   --custom-data cloud-init.txt
 
 az vm create \
@@ -240,7 +241,7 @@ az vm create \
   --image UbuntuLTS \
   --nics crdb-$loc2-nic3 \
   --admin-username ubuntu \
-  --generate-ssh-keys
+  --generate-ssh-keys \
   --custom-data cloud-init.txt
 ```
 ### Region 3
@@ -253,7 +254,7 @@ az vm create \
   --image UbuntuLTS \
   --nics crdb-$loc3-nic1 \
   --admin-username ubuntu \
-  --generate-ssh-keys
+  --generate-ssh-keys \
   --custom-data cloud-init.txt
 
 az vm create \
@@ -263,7 +264,7 @@ az vm create \
   --image UbuntuLTS \
   --nics crdb-$loc3-nic2 \
   --admin-username ubuntu \
-  --generate-ssh-keys
+  --generate-ssh-keys \
   --custom-data cloud-init.txt
 
 az vm create \
@@ -273,7 +274,7 @@ az vm create \
   --image UbuntuLTS \
   --nics crdb-$loc3-nic3 \
   --admin-username ubuntu \
-  --generate-ssh-keys
+  --generate-ssh-keys \
   --custom-data cloud-init.txt
 ```
 

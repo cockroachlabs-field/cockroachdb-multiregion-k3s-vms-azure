@@ -168,7 +168,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
       - name: cockroachdb
-        image: cockroachdb/cockroach:v21.2.0
+        image: cockroachdb/cockroach:v21.2.3
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 26257
@@ -248,4 +248,4 @@ spec:
         - "ReadWriteOnce"
       resources:
         requests:
-          storage: 100Gi
+          storage: 10Gi

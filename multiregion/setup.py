@@ -103,49 +103,49 @@ for zone, context in contexts.items():
     check_call(['kubectl', 'create', 'secret', 'generic', 'cockroachdb.client.root', '--namespace', zone, '--from-file', certs_dir, '--context', context])
     check_call([cockroach_path, 'cert', 'create-node', '--certs-dir', certs_dir, '--ca-key', ca_key_dir+'/ca.key', 'localhost', '127.0.0.1', 'cockroachdb-public', 'cockroachdb-public.default', 'cockroachdb-public.'+zone, 'cockroachdb-public.%s.svc.cluster.local' % (zone), '*.cockroachdb', '*.private.cockroach.internal', '*.cockroachdb.'+zone, '*.cockroachdb.%s.svc.cluster.local' % (zone)])
     check_call(['kubectl', 'create', 'secret', 'generic', 'cockroachdb.node', '--namespace', zone, '--from-file', certs_dir, '--context', context])
-#    check_call('rm %s/node.*' % (certs_dir), shell=True)
+    check_call('rm %s/node.*' % (certs_dir), shell=True)
 
     check_call(['kubectl', 'apply', '-f', 'dns-lb.yaml', '--context', context])
 
 # Set up each cluster to forward DNS requests for zone-scoped namespaces to the
 # relevant cluster's DNS server, using load balancers in order to create a
 # static IP for each cluster's DNS endpoint.
-dns_ips = dict()
-for zone, context in contexts.items():
-    external_ip = ''
-    while True:
-        external_ip = check_output(['kubectl', 'get', 'svc', 'kube-dns-lb', '--namespace', 'kube-system', '--context', context, '--template', '{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}'])
-        if external_ip:
-            break
-        print  'Waiting for DNS load balancer IP in %s...' % (zone)
-        sleep(10)
-    print 'DNS endpoint for zone %s: %s' % (zone, external_ip)
-    dns_ips[zone] = external_ip
+#dns_ips = dict()
+#for zone, context in contexts.items():
+#    external_ip = ''
+#    while True:
+#        external_ip = check_output(['kubectl', 'get', 'svc', 'kube-dns-lb', '--namespace', 'kube-system', '--context', context, '--template', '{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}'])
+#        if external_ip:
+#            break
+#        print  'Waiting for DNS load balancer IP in %s...' % (zone)
+#        sleep(10)
+#    print 'DNS endpoint for zone %s: %s' % (zone, external_ip)
+#    dns_ips[zone] = external_ip
 
 # Update each cluster's DNS configuration with an appropriate configmap. Note
 # that we have to leave the local cluster out of its own configmap to avoid
 # infinite recursion through the load balancer IP. We then have to delete the
 # existing DNS pods in order for the new configuration to take effect.
-for zone, context in contexts.items():
-    remote_dns_ips = dict()
-    for z, ip in dns_ips.items():
-        if z == zone:
-            continue
-        remote_dns_ips[z+'.svc.cluster.local'] = [ip]
-    config_filename = '%s/dns-configmap-%s.yaml' % (generated_files_dir, zone)
-    with open(config_filename, 'w') as f:
-        f.write("""\
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: kube-dns
-  namespace: kube-system
-data:
-  stubDomains: |
-    %s
-""" % (json.dumps(remote_dns_ips)))
-    check_call(['kubectl', 'apply', '-f', config_filename, '--namespace', 'kube-system', '--context', context])
-    check_call(['kubectl', 'delete', 'pods', '-l', 'k8s-app=kube-dns', '--namespace', 'kube-system', '--context', context])
+#for zone, context in contexts.items():
+#    remote_dns_ips = dict()
+#    for z, ip in dns_ips.items():
+#        if z == zone:
+#            continue
+#        remote_dns_ips[z+'.svc.cluster.local'] = [ip]
+#    config_filename = '%s/dns-configmap-%s.yaml' % (generated_files_dir, zone)
+#    with open(config_filename, 'w') as f:
+#        f.write("""\
+#apiVersion: v1
+#kind: ConfigMap
+#metadata:
+#  name: kube-dns
+#  namespace: kube-system
+#data:
+#  stubDomains: |
+#    %s
+#""" % (json.dumps(remote_dns_ips)))
+#    check_call(['kubectl', 'apply', '-f', config_filename, '--namespace', 'kube-system', '--context', context])
+#    check_call(['kubectl', 'delete', 'pods', '-l', 'k8s-app=kube-dns', '--namespace', 'kube-system', '--context', context])
 
 # Create a cockroachdb-public service in the default namespace in each cluster.
 for zone, context in contexts.items():

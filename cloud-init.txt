@@ -1,0 +1,13 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - curl
+output: {all: '| tee -a /var/log/cloud-init-output.log'}
+runcmd:
+  - set -e
+  - grep -v -G domain-name /etc/dhcp/dhclient.conf  > dhclient.tmp
+  - echo "supersede domain-name \"private.cockroach.internal\";"    >> dhclient.tmp
+  - echo "prepend domain-name-servers 168.63.129.16;" >> dhclient.tmp
+  - sudo cp /etc/dhcp/dhclient.conf /etc/dhcp/dhclient.conf.old
+  - sudo cp dhclient.tmp /etc/dhcp/dhclient.conf
+  - sudo dhclient -v
