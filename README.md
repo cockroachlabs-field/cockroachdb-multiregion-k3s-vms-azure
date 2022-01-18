@@ -58,6 +58,9 @@ To complete this demo there are a number of steps. These are listed below.
 Creating resources in Azure costs money, so make sure you delete the Resource Group once you’re finished.
 ```
 az group delete --name $rg
+rm /Users/mikebookham/.kube/config
+touch /Users/mikebookham/.kube/config
+cat /Users/mikebookham/.kube/config
 ```
 ## Conclusion
 
