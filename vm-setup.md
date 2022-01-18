@@ -27,11 +27,14 @@ scp ca.key ubuntu@$LOC3NODE1:/home/ubuntu/cockroach/my-safe-directory
 
 Now all the files have been copied across to the node we can SSH in and install and run Cockroachdb. First we download the binary, extract and copy to our path.
 ```
-curl https://binaries.cockroachdb.com/cockroach-v21.2.2.linux-amd64.tgz | tar -xz && sudo cp -i cockroach-v21.2.2.linux-amd64/cockroach /usr/local/bin/
+ssh ubuntu@$LOC3NODE1
+
+curl https://binaries.cockroachdb.com/cockroach-v21.2.3.linux-amd64.tgz | tar -xz && sudo cp -i cockroach-v21.2.3.linux-amd64/cockroach /usr/local/bin/
 
 cockroach --version
+cd cockroach
 chmod 766 startdb.sh    
-cd cockroach/certs
+cd certs
 chmod 700 *
 ./startdb.sh
 ```
@@ -63,14 +66,16 @@ ssh ubuntu@$LOC3NODE2
 ```
 
 ```
-curl https://binaries.cockroachdb.com/cockroach-v21.2.2.linux-amd64.tgz | tar -xz && sudo cp -i cockroach-v21.2.2.linux-amd64/cockroach /usr/local/bin/
+curl https://binaries.cockroachdb.com/cockroach-v21.2.3.linux-amd64.tgz | tar -xz && sudo cp -i cockroach-v21.2.3.linux-amd64/cockroach /usr/local/bin/
 
 cockroach --version
+cd cockroach
 chmod 766 startdb.sh    
-cd cockroach/certs
+cd certs
 chmod 700 *
-cd cockroach/my-safe-directory
+cd ../my-safe-directory
 chmod 700 *
+cd ..
 ./startdb.sh
 ```
 
@@ -102,15 +107,16 @@ ssh ubuntu@$LOC3NODE3
 ```
 
 ```
-curl https://binaries.cockroachdb.com/cockroach-v21.2.2.linux-amd64.tgz | tar -xz && sudo cp -i cockroach-v21.2.2.linux-amd64/cockroach /usr/local/bin/
+curl https://binaries.cockroachdb.com/cockroach-v21.2.3.linux-amd64.tgz | tar -xz && sudo cp -i cockroach-v21.2.3.linux-amd64/cockroach /usr/local/bin/
 
 cockroach --version
 cd cockroach
 chmod 766 startdb.sh    
 cd certs
 chmod 700 *
-cd my-safe-directory
+cd ../my-safe-directory
 chmod 700 *
+cd ..
 ./startdb.sh
 ```
 
@@ -121,6 +127,26 @@ kubectl port-forward cockroachdb-0 8080 --context $clus1 --namespace $loc1
 ```
 
 In the UI you  should see all of of the nine nodes, six coming form Kubernetes and three from Virtual Machines.
+
+Deploy the Movr application on node4.
+
+```
+ssh ubuntu@20.107.210.26
+```
+
+
+```
+git clone https://github.com/cockroachlabs/movr-flask.git
+
+cd movr-flask
+
+sudo -H pip install -U pipenv
+
+pipenv --three
+
+pipenv install
+
+
 
 [Back](README.md)
 

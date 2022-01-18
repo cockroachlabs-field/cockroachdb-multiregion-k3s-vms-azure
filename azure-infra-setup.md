@@ -278,6 +278,112 @@ az vm create \
   --custom-data cloud-init.txt
 ```
 
+- Deploy an internal Load Balancer for Region 3
+
+Create the Load Balancer and two Health Probes for the two services we are intending to load balance in Region 3.
+
+```
+az network lb create \
+    --resource-group $rg \
+    --name crdb-$loc3-lb \
+    --location northeurope \
+    --sku Standard \
+    --vnet-name crdb-$loc3 \
+    --subnet crdb-$loc3-sub1 \
+    --frontend-ip-name crdb-$loc3-frontend \
+    --backend-pool-name crdb-$loc3-backendpool
+
+az network lb probe create \
+    --resource-group $rg \
+    --lb-name crdb-$loc3-lb \
+    --name healthprobe-sql \
+    --protocol tcp \
+    --port 26257
+
+az network lb probe create \
+    --resource-group $rg \
+    --lb-name crdb-$loc3-lb \
+    --name healthprobe-http \
+    --protocol tcp \
+    --port 8080   
+```
+Create the load balancing rules for the two services. 
+
+```
+az network lb rule create \
+    --resource-group $rg \
+    --lb-name crdb-$loc3-lb \
+    --name crdb-$loc3-HTTPRule \
+    --protocol tcp \
+    --frontend-port 8080 \
+    --backend-port 8080 \
+    --frontend-ip-name crdb-$loc3-frontend \
+    --backend-pool-name crdb-$loc3-backendpool \
+    --probe-name healthprobe-http \
+    --idle-timeout 15 \
+    --enable-tcp-reset true
+
+az network lb rule create \
+    --resource-group $rg \
+    --lb-name crdb-$loc3-lb \
+    --name crdb-$loc3-SQLRule \
+    --protocol tcp \
+    --frontend-port 26257 \
+    --backend-port 26257 \
+    --frontend-ip-name crdb-$loc3-frontend \
+    --backend-pool-name crdb-$loc3-backendpool \
+    --probe-name healthprobe-sql \
+    --idle-timeout 15 \
+    --enable-tcp-reset true
+```
+
+Add the three VM's in Region 3 to the backend pool.
+```
+az network nic ip-config address-pool add \
+    --address-pool crdb-$loc3-backendpool \
+    --ip-config-name ipconfig1 \
+    --nic-name crdb-$loc3-nic1 \
+    --resource-group $rg \
+    --lb-name crdb-$loc3-lb
+
+az network nic ip-config address-pool add \
+    --address-pool crdb-$loc3-backendpool \
+    --ip-config-name ipconfig1 \
+    --nic-name crdb-$loc3-nic2 \
+    --resource-group $rg \
+    --lb-name crdb-$loc3-lb
+
+az network nic ip-config address-pool add \
+    --address-pool crdb-$loc3-backendpool \
+    --ip-config-name ipconfig1 \
+    --nic-name crdb-$loc3-nic3 \
+    --resource-group $rg \
+    --lb-name crdb-$loc3-lb
+```
+
+Create and Virtual Machine to run the MOVR application.
+
+```
+az network public-ip create --resource-group $rg --location $loc3 --name crdb-$loc3-ip4 --sku standard
+
+az network nic create \
+    --resource-group $rg \
+    -l $loc3 \
+    --name crdb-$loc3-nic4 \
+    --vnet-name crdb-$loc3 --subnet crdb-$loc3-sub1 --network-security-group crdb-$loc3-nsg --public-ip-address crdb-$loc3-ip4
+
+az vm create \
+  --resource-group $rg \
+  --location $loc3 \
+  --name crdb-$loc3-node4 \
+  --image UbuntuLTS \
+  --nics crdb-$loc3-nic4 \
+  --admin-username ubuntu \
+  --generate-ssh-keys \
+  --custom-data cloud-init.txt
+```
+
+
 You now have all the required infrastructure to move to the next stage. [Deploying Kubernetes.](kubernetes-setup.md)
 
 [Back](README.md)
