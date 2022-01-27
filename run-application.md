@@ -77,12 +77,12 @@ INSERT INTO rides (city, rider_id, vehicle_id, start_location, end_location, sta
 
 ```
 
-1. What you are able to do to simulate the load of an application
+1. What you are able to do to simulate the load of an application (Don't create the schema above as this is not compatible with 'cockroach workload movr')
 
 ```
-  cockroach workload init movr --duration=10m 'postgresql://uesr:password@cockroachdb-public:26257/movr?sslmode=verify-full&sslrootcert=/cockroach-certs/ca.crt'
+cockroach workload init movr 'postgresql://uesr:password@cockroachdb-public:26257/movr?sslmode=verify-full&sslrootcert=/cockroach-certs/ca.crt'
 
-  cockroach workload run movr --duration=10m 'postgresql://use:password@cockroachdb-public:26257/movr?sslmode=verify-full&sslrootcert=/cockroach-certs/ca.crt'
+cockroach workload run movr --duration=99999m 'postgresql://user:password@cockroachdb-public:26257/movr?sslmode=verify-full&sslrootcert=/cockroach-certs/ca.crt'
 
-  cockroach workload run movr --duration=10m 'postgresql://user:password@crdb-northeurope-node1.private.cockroach.internal:26257/movr?sslmode=verify-full&sslrootcert=/home/ubuntu/cockroach/certs/ca.crt'
+cockroach workload run movr --duration=10m 'postgresql://user:password@crdb-northeurope-node1.private.cockroach.internal:26257/movr?sslmode=verify-full&sslrootcert=/home/ubuntu/cockroach/certs/ca.crt'
 ```
