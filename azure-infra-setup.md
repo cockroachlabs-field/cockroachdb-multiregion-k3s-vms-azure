@@ -6,7 +6,7 @@ Description: Setting up and configuring all the required infrastructure to suppo
 
 ```bash
 export vm_type="Standard_DS2_v2"
-export rg="crdb-k3s-multi-region"
+export rg="bookham-k3s-multi-region"
 export clus1="crdb-k3s-eastus"
 export clus2="crdb-k3s-westus"
 export clus3="crdb-k3s-northeurope"

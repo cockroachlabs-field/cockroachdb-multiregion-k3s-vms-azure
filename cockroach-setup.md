@@ -21,8 +21,8 @@ kubectl -n kube-system get configmap coredns -o yaml > <configmap-backup-name>
 Then apply the new ConfigMap:
 
 ```bash
-kubectl apply -f eastus.yaml --context crdb-k3s-eastus
-kubectl apply -f westusus.yaml --context crdb-k3s-westus
+kubectl replace -f eastus.yaml --context crdb-k3s-eastus --force
+kubectl replace -f westus.yaml --context crdb-k3s-westus --force
 ```
 
 4. For each region, check that your CoreDNS settings were applied: 
