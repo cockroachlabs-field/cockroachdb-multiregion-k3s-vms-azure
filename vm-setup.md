@@ -2,13 +2,13 @@
 
 The following steps need to be completed on each of the nodes which you wish to add to the cluster.
 
-First step is to SSH to the node and the required folder structure.
+- First step is to SSH to the node and the required folder structure.
 ```
 LOC3NODE1=$(az vm show -d -g $rg  -n crdb-$loc3-node1 --query publicIps -o tsv)
 
 ssh ubuntu@$LOC3NODE1
 ```
-Now create the required folder structure. 
+- Now create the required folder structure. 
 ```
 mkdir cockroach
 cd cockroach
@@ -16,7 +16,7 @@ mkdir certs
 mkdir my-safe-directory
 exit
 ```
-Now we need to transfer some files over to each nodes. This would be the required certificates to join the nodes to the cluster. We will also transfer a shell script that will start cockroach on each node.
+- Now we need to transfer some files over to each nodes. This would be the required certificates to join the nodes to the cluster. We will also transfer a shell script that will start cockroach on each node.
 ```
 scp startdb.sh ubuntu@$LOC3NODE1:/home/ubuntu/cockroach
 cd multiregion/certs
@@ -127,25 +127,6 @@ kubectl port-forward cockroachdb-0 8080 --context $clus1 --namespace $loc1
 ```
 
 In the UI you  should see all of of the nine nodes, six coming form Kubernetes and three from Virtual Machines.
-
-Deploy the Movr application on node4.
-
-```
-ssh ubuntu@20.107.210.26
-```
-
-
-```
-git clone https://github.com/cockroachlabs/movr-flask.git
-
-cd movr-flask
-
-sudo -H pip install -U pipenv
-
-pipenv --three
-
-pipenv install
-
 
 
 [Back](README.md)

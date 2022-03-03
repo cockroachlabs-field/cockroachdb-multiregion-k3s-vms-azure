@@ -26,7 +26,7 @@ az group create --name $rg --location $loc1
 
 - Networking configuration
 
-In order to enable VPC peering between the regions, the CIDR blocks of the VPCs must not overlap. This value cannot change once the cluster has been created, so be sure that your IP ranges do not overlap.
+In order to enable VNet peering between the regions, the CIDR blocks of the VPCs must not overlap. This value cannot change once the cluster has been created, so be sure that your IP ranges do not overlap.
 
 - Create vnets for all Regions
 
@@ -57,7 +57,7 @@ az network vnet peering create -g $rg -n $loc3-$loc1-peer --vnet-name crdb-$loc3
     --remote-vnet crdb-$loc1 --allow-vnet-access --allow-forwarded-traffic --allow-gateway-transit
 ```
 
-Create a DNS Private Zone for name resolution for all region.
+- Create a DNS Private Zone for name resolution for all region.
 
 ```
 az network private-dns zone create -g $rg \
@@ -278,7 +278,7 @@ az vm create \
   --custom-data cloud-init.txt
 ```
 
-- Deploy an internal Load Balancer for Region 3
+- Deploy an internal Load Balancer for the virtual machines in Region 3
 
 Create the Load Balancer and two Health Probes for the two services we are intending to load balance in Region 3.
 
