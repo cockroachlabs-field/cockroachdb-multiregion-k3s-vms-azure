@@ -1,7 +1,5 @@
 # Kubernetes Setup
 
-## Build Steps
-
 The first step is to install a K3s master node.
 To do this we will be using [k3sup](https://github.com/alexellis/k3sup) (said 'ketchup'). [k3sup](https://github.com/alexellis/k3sup) is a light-weight utility to get from zero to KUBECONFIG with k3s on any local or remote VM. All you need is ssh access and the k3sup binary to get kubectl access immediately.
 
