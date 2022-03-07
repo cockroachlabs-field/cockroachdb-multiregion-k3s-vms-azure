@@ -6,6 +6,28 @@
 cd multiregion
 ```
 
+Retrieve the kubectl "contexts" for your clusters:
+
+```
+kubectl config get-contexts
+```
+
+At the top of the setup.py script, fill in the contexts map with the zones of your clusters and their "context" names, this has been done in the files provided in this demo but is for the regions set out at the beginning. e.g.:
+```
+contexts = {
+    'eastus': 'crdb-k3s-eastus',
+    'westus': 'crdb-k3s-westus',
+}
+```
+In the setup.py script, fill in the regions map with the zones and corresponding regions of your clusters, for example:
+```
+regions = {
+    'eastus': 'eastus',
+    'westus': 'westus',
+}
+```
+Setting regions is optional, but recommended, because it improves CockroachDB's ability to diversify data placement if you use more than one zone in the same region. If you aren't specifying regions, just leave the map empty.
+
 1. Run the `setup.py` script: 
 
 ```bash
@@ -87,8 +109,9 @@ kubectl exec -it cockroachdb-client-secure -n $loc1 -- ./cockroach sql --certs-d
 10. Create a user and make admin.
 
 ```
-CREATE USER <username>;
+CREATE USER <username> WITH PASSWORD 'cockroach';
 GRANT admin TO <username>;
+\q
 ```
 Now you are ready to move to the next step. [Virtual Machine Setup](vm-setup.md)
 

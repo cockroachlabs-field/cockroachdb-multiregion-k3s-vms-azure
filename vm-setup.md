@@ -16,8 +16,9 @@ mkdir certs
 mkdir my-safe-directory
 exit
 ```
-- Now we need to transfer some files over to each nodes. This would be the required certificates to join the nodes to the cluster. We will also transfer a shell script that will start cockroach on each node.
+- Now we need to transfer some files over to each nodes. This would be the required certificates to join the nodes to the cluster. We will also transfer a shell script that will start cockroach on each node. Make sure you are currently in the root of the repo fro the next set of commands.
 ```
+cd ../..
 scp startdb.sh ubuntu@$LOC3NODE1:/home/ubuntu/cockroach
 cd multiregion/certs
 scp ca.crt client.root.crt client.root.key ubuntu@$LOC3NODE1:/home/ubuntu/cockroach/certs
@@ -36,6 +37,7 @@ cd cockroach
 chmod 766 startdb.sh    
 cd certs
 chmod 700 *
+cd ..
 ./startdb.sh
 ```
 Repeat these steps on the other two nodes...
@@ -53,6 +55,7 @@ exit
 ```
 
 ```
+cd ../..
 scp startdb.sh ubuntu@$LOC3NODE2:/home/ubuntu/cockroach
 cd multiregion/certs
 scp ca.crt client.root.crt client.root.key ubuntu@$LOC3NODE2:/home/ubuntu/cockroach/certs
@@ -70,7 +73,7 @@ curl https://binaries.cockroachdb.com/cockroach-v21.2.3.linux-amd64.tgz | tar -x
 
 cockroach --version
 cd cockroach
-chmod 766 startdb.sh    
+chmod 766 startdb.sh
 cd certs
 chmod 700 *
 cd ../my-safe-directory
@@ -94,6 +97,7 @@ exit
 ```
 
 ```
+cd ../..
 scp startdb.sh ubuntu@$LOC3NODE3:/home/ubuntu/cockroach
 cd multiregion/certs
 scp ca.crt client.root.crt client.root.key ubuntu@$LOC3NODE3:/home/ubuntu/cockroach/certs
