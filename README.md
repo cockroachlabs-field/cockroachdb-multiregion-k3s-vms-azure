@@ -1,7 +1,7 @@
 
-# CockroachDB Azure Multi Region Demo with k3s (Manual)
+# CockroachDB Azure Multi Region Demo with k3s and Virtual Machines Mixed Nodes (Manual)
 
-In this demo you will deploy CockroachDB across three Azure Regions. Regions will be running a K3s Kubernetes. This is to demonstrate the flexibility that can be achieved in a variety of deployments scenarios.
+In this demo you will deploy CockroachDB across three Azure Regions. Two regions will be running a K3s Kubernetes and the third region will be running Ubuntu based Virtual Machines. This is to demonstrate the flexibility that can be achieved in a variety of deployments scenarios.
 
 ## Requirements
 
@@ -39,7 +39,7 @@ Creating resources in Azure costs money, so make sure you delete the Resource Gr
 az group delete --name $rg
 rm ~/.kube/config
 touch ~/.kube/config
-cat ~/mikebookham/.kube/config
+cat ~/.kube/config
 ```
 ## Conclusion
 

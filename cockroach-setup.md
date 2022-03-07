@@ -18,6 +18,27 @@ python setup.py
 kubectl -n kube-system get configmap coredns -o yaml > <configmap-backup-name>
 ```
 
+In this demo I have used `eastus` and `westus` for my Kubernetes regions and `northeurope` as my virtual machines region. If you are using the same then you will be able to use the two configmaps below. If you are using other regions and IP addressing then you can use them as examples but you will need to edit the contents to reflect the regions you are using. Here is a snippet below that show where you need to modify.
+
+```
+    westus.svc.cluster.local:53 {       # <---- Modify
+        log
+        errors
+        ready
+        cache 10
+        forward . 10.2.1.4 10.2.1.5 10.2.1.6 {      # <---- Modify
+        }
+    }
+    private.cockroach.internal:53 {       # <---- Modify
+        log
+        errors
+        ready
+        cache 10
+        forward . 168.63.129.16:53 {      # <---- Modify
+        }
+    }
+```
+
 Then apply the new ConfigMap:
 
 ```bash
@@ -70,4 +91,5 @@ CREATE USER <username>;
 GRANT admin TO <username>;
 ```
 Now you are ready to move to the next step. [Virtual Machine Setup](vm-setup.md)
+
 [Back](README.md)

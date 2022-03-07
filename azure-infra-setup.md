@@ -361,7 +361,7 @@ az network nic ip-config address-pool add \
     --lb-name crdb-$loc3-lb
 ```
 
-Create and Virtual Machine to run the MOVR application.
+Create and Virtual Machine to run your application from.
 
 ```
 az network public-ip create --resource-group $rg --location $loc3 --name crdb-$loc3-ip4 --sku standard
