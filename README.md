@@ -7,12 +7,9 @@ In this demo you will deploy CockroachDB across three Azure Regions. Two regions
 
 This solution will deliver the following requirements.
 
-- Deploy a Multi Region CockroachDB solution in either one or more cloud providers. 
-- Three regions in Kubernetes.
-- Implement split node certificates.
-- Implement pgpool and/or pgbouncer.
-- Attach an application to the application.
-
+- Deploy a Multi Region CockroachDB solution in Azure. 
+- Two regions in Kubernetes.
+- One region running on Virtual Machines.
 
 ## Prerequisites 
 
