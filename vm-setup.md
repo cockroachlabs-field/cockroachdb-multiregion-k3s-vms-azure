@@ -26,7 +26,7 @@ cd ../my-safe-directory
 scp ca.key ubuntu@$LOC3NODE1:/home/ubuntu/cockroach/my-safe-directory
 ```
 
-Now all the files have been copied across to the node we can SSH in and install and run Cockroachdb. First we download the binary, extract and copy to our path.
+- Now all the files have been copied across to the node we can SSH in and install and run Cockroachdb. First we download the binary, extract and copy to our path.
 ```
 ssh ubuntu@$LOC3NODE1
 
@@ -40,7 +40,7 @@ chmod 700 *
 cd ..
 ./startdb.sh
 ```
-Repeat these steps on the other two nodes...
+- Repeat these steps on the other two nodes...
 ```
 LOC3NODE2=$(az vm show -d -g $rg  -n crdb-$loc3-node2 --query publicIps -o tsv)
 
@@ -63,7 +63,7 @@ cd ../my-safe-directory
 scp ca.key ubuntu@$LOC3NODE2:/home/ubuntu/cockroach/my-safe-directory
 ```
 
-Now all the files have been copied across to the node we can SSH in and install and run Cockroachdb. First we download the binary, extract and copy to our path.
+- Now all the files have been copied across to the node we can SSH in and install and run Cockroachdb. First we download the binary, extract and copy to our path.
 ```
 ssh ubuntu@$LOC3NODE2
 ```
@@ -82,7 +82,7 @@ cd ..
 ./startdb.sh
 ```
 
-Node 3....
+- Node 3....
 ```
 LOC3NODE3=$(az vm show -d -g $rg  -n crdb-$loc3-node3 --query publicIps -o tsv)
 
@@ -105,7 +105,7 @@ cd ../my-safe-directory
 scp ca.key ubuntu@$LOC3NODE3:/home/ubuntu/cockroach/my-safe-directory
 ```
 
-Now all the files have been copied across to the node we can SSH in and install and run Cockroachdb. First we download the binary, extract and copy to our path.
+- Now all the files have been copied across to the node we can SSH in and install and run Cockroachdb. First we download the binary, extract and copy to our path.
 ```
 ssh ubuntu@$LOC3NODE3
 ```
