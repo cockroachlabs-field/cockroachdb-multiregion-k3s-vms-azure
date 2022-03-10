@@ -1,5 +1,7 @@
 # Deploy CockroachDB to Kubernetes Clusters
 
+Description: Deploy CockroachDB as a StatefulSet to the Kubernetes Clusters we have created.
+
 Change directory to the 'multiregion' folder.
 
 ```bash
@@ -13,19 +15,23 @@ kubectl config get-contexts
 ```
 
 At the top of the setup.py script, fill in the contexts map with the zones of your clusters and their "context" names, this has been done in the files provided in this demo but is for the regions set out at the beginning. e.g.:
+
 ```
 contexts = {
     'eastus': 'crdb-k3s-eastus',
     'westus': 'crdb-k3s-westus',
 }
 ```
+
 In the setup.py script, fill in the regions map with the zones and corresponding regions of your clusters, for example:
+
 ```
 regions = {
     'eastus': 'eastus',
     'westus': 'westus',
 }
 ```
+
 Setting regions is optional, but recommended, because it improves CockroachDB's ability to diversify data placement if you use more than one zone in the same region. If you aren't specifying regions, just leave the map empty.
 
 - Run the `setup.py` script: 
@@ -40,7 +46,7 @@ python setup.py
 kubectl -n kube-system get configmap coredns -o yaml > <configmap-backup-name>
 ```
 
-In this demo I have used `eastus` and `westus` for my Kubernetes regions and `northeurope` as my virtual machines region. If you are using the same then you will be able to use the two configmaps below. If you are using other regions and IP addressing then you can use them as examples but you will need to edit the contents to reflect the regions you are using. Here is a snippet below that show where you need to modify.
+In this demo I have used `eastus` and `westus` for my Kubernetes regions and `northeurope` as my virtual machines region. If you are using the same then you will be able to use the two configmaps below. If you are using other regions and IP addressing then you can use them as examples but you will need to edit the contents to reflect the regions you are using. Here is a snippet below that show where you need to modify. For the DNS suffix `private.cockroach.internal` I have forwarded these DNS requests to `168.63.129.16` this is Azures DNS Server. This is the same DNS Server used for the virtual machines name resolution. If you change the DNS suffix in the variable in the first step you will need to update it in your configmaps.
 
 ```
     westus.svc.cluster.local:53 {       # <---- Modify

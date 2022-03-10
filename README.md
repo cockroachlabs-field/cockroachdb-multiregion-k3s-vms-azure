@@ -1,7 +1,7 @@
 
 # CockroachDB Multi-Region Custer with a mix of k3s Kubernetes and Virtual Machines nodes running in Azure (Manual)
 
-In this demo you will deploy CockroachDB across three Azure Regions. Two regions will be running a K3s Kubernetes and the third region will be running Ubuntu based Virtual Machines. This is to demonstrate the flexibility that can be achieved in a variety of deployments scenarios.
+In this demo you will deploy CockroachDB across three Azure Regions. Two regions will be running a K3s Kubernetes cluster and the third region will be running Ubuntu based Virtual Machines. This is to demonstrate the flexibility that can be achieved in a variety of deployments scenarios.
 
 ## Requirements
 
